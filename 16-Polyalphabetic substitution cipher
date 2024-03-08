@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Function to perform Vigenère encryption
+void vigenereEncrypt(char *plaintext, char *keyword, char *ciphertext) {
+    int i, j;
+    int plaintextLen = strlen(plaintext);
+    int keywordLen = strlen(keyword);
+
+    for (i = 0, j = 0; i < plaintextLen; ++i) {
+        char currentChar = plaintext[i];
+
+        if (isalpha(currentChar)) {
+            // Adjust the character based on the key
+            char keyChar = keyword[j % keywordLen];
+            int shift = isupper(keyChar) ? keyChar - 'A' : keyChar - 'a';
+
+            if (isupper(currentChar)) {
+                ciphertext[i] = (currentChar + shift - 'A') % 26 + 'A';
+            } else {
+                ciphertext[i] = (currentChar + shift - 'a') % 26 + 'a';
+            }
+
+            ++j;
+        } else {
+            // Non-alphabetic characters remain unchanged
+            ciphertext[i] = currentChar;
+        }
+    }
+
+    ciphertext[i] = '\0'; // Null-terminate the ciphertext string
+}
+
+int main() {
+    char plaintext[100], keyword[20], ciphertext[100];
+
+    printf("Enter the plaintext: ");
+    gets(plaintext); // Note: gets is unsafe, consider using fgets instead
+
+    printf("Enter the keyword: ");
+    gets(keyword);
+
+    vigenereEncrypt(plaintext, keyword, ciphertext);
+
+    printf("Ciphertext: %s\n", ciphertext);
+
+    return 0;
+}
